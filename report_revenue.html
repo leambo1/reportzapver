@@ -1,20 +1,21 @@
 <!-- Filters Bar -->
 <div class="filters-bar">
     <div class="filter-group">
-        <label>ຊ່ວງເວລາ</label>
-        <select id="rr_period">
-            <option value="today">ມື້ນີ້</option>
-            <option value="yesterday">ມື້ວານນີ້</option>
-            <option value="this_month">ເດືອນນີ້</option>
-        </select>
-    </div>
-    <div class="filter-group">
         <label>ຈາກວັນທີ</label>
         <input type="date" id="rr_start" value="2026-07-27">
     </div>
     <div class="filter-group">
         <label>ຫາວັນທີ</label>
         <input type="date" id="rr_end" value="2026-07-27">
+    </div>
+    <div class="filter-group">
+        <label>ເລືອກຊ່ວງເວລາ</label>
+        <select id="rr_period">
+            <option value="today">ມື້ນີ້ (Today)</option>
+            <option value="yesterday">ມື້ວານນີ້ (Yesterday)</option>
+            <option value="this_week">ອາທິດນີ້ (This Week)</option>
+            <option value="this_month">ເດືອນນີ້ (This Month)</option>
+        </select>
     </div>
     <button class="btn btn-search" id="btn-search-revenue">
         <i class="bi bi-search"></i> ຄົ້ນຫາ
@@ -27,28 +28,22 @@
     </button>
 </div>
 
-<!-- Summary Cards for Revenue -->
-<div class="summary-cards">
-    <div class="card">
-        <div class="card-icon green"><i class="bi bi-cash"></i></div>
-        <div class="card-info">
-            <span class="card-label">ຮັບເງິນສົດ (Cash)</span>
-            <span class="card-value" id="val-cash-rev">0 ₭</span>
-        </div>
+<!-- Revenue Summary Cards -->
+<div class="summary-cards" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="card shadow-sm">
+        <div class="card-title">ຍອດຂາຍເງິນສົດ (Cash)</div>
+        <div class="card-value text-success" id="val-cash-rev">0 ₭</div>
+        <div class="card-sub">ລວມການຊຳລະດ້ວຍເງິນສົດ</div>
     </div>
-    <div class="card">
-        <div class="card-icon blue"><i class="bi bi-bank"></i></div>
-        <div class="card-info">
-            <span class="card-label">ຮັບເງິນໂອນ (Transfer)</span>
-            <span class="card-value" id="val-transfer-rev">0 ₭</span>
-        </div>
+    <div class="card shadow-sm">
+        <div class="card-title">ຍອດຂາຍເງິນໂອນ (Transfer)</div>
+        <div class="card-value text-primary" id="val-transfer-rev">0 ₭</div>
+        <div class="card-sub">ລວມການຊຳລະດ້ວຍ BCEL / ທະນາຄານ</div>
     </div>
-    <div class="card" style="background: rgba(242, 101, 34, 0.05); border-color: var(--primary);">
-        <div class="card-icon orange"><i class="bi bi-wallet2"></i></div>
-        <div class="card-info">
-            <span class="card-label">ລວມຮັບເງິນທັງໝົດ</span>
-            <span class="card-value" id="val-total-rev" style="color: var(--primary);">0 ₭</span>
-        </div>
+    <div class="card shadow-sm" style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border-color: #ffedd5;">
+        <div class="card-title" style="color:#c2410c;">ລວມຍອດຂາຍທັງໝົດ (Total Revenue)</div>
+        <div class="card-value" style="color:#ea580c; font-size:26px;" id="val-total-rev">0 ₭</div>
+        <div class="card-sub" style="color:#9a3412;">ຍອດຂາຍລວມທຸກປະເພດການຈ່າຍ</div>
     </div>
 </div>
 
@@ -58,9 +53,9 @@
         <thead>
             <tr>
                 <th>ລຳດັບ</th>
-                <th>ຊ່ອງທາງຮັບເງິນ</th>
-                <th class="text-center">ຈຳນວນລາຍການ (ບິນ)</th>
-                <th class="text-right">ຍອດຮັບເງິນ (₭)</th>
+                <th>ປະເພດການຊຳລະ (Payment Method)</th>
+                <th class="text-center">ຈຳນວນບິນ (Transactions)</th>
+                <th class="text-right">ລວມຈຳນວນເງິນ (₭)</th>
             </tr>
         </thead>
         <tbody id="tbody-revenue"></tbody>
@@ -95,7 +90,7 @@
     <table class="r-table">
         <thead>
             <tr>
-                <th>ຊ່ອງທາງຮັບເງິນ</th>
+                <th>ວິທີຊຳລະ (Payment)</th>
                 <th class="right">ລວມ (Total)</th>
             </tr>
         </thead>
@@ -106,7 +101,7 @@
 
     <div class="r-totals">
         <div class="r-total-row">
-            <span>ລວມລາຍການ (QTY)</span>
+            <span>ລວມຈຳນວນບິນທັງໝົດ</span>
             <span id="ptotal-qty-revenue">0</span>
         </div>
     </div>
@@ -115,7 +110,7 @@
     
     <div class="r-totals">
         <div class="r-total-row grand-total">
-            <span>ຍອດເງິນ (Amount)</span>
+            <span>ຍອດຂາຍລວມ (Amount)</span>
             <span id="ptotal-revenue">0 ₭</span>
         </div>
     </div>
@@ -123,7 +118,7 @@
     <div class="r-divider"></div>
     
     <div class="r-footer">
-        <p>ສະຫຼຸບລາຍງານຍອດເງິນ</p>
+        <p>ສະຫຼຸບລາຍງານຍອດເງິນຂາຍ</p>
         <p>Thank You For Using ZapVer</p>
     </div>
 </div>
@@ -138,7 +133,7 @@
             </svg>
             <div>
                 <h2>ຮ້ານ ZapVer POS</h2>
-                <p>ລາຍງານຍອດເງິນຂາຍຕາມປະເພດການຈ່າຍ / Revenue Report (A4)</p>
+                <p>ລາຍງານຍອດເງິນການຂາຍ / Revenue Summary Report (A4)</p>
             </div>
         </div>
         <div class="a4-meta">
@@ -150,15 +145,15 @@
 
     <div class="a4-summary-grid" style="grid-template-columns: repeat(3, 1fr);">
         <div class="a4-summary-box">
-            <span>ຮັບເງິນສົດ (Cash)</span>
-            <strong id="p-a4-val-cash-rev">0 ₭</strong>
+            <span>ຍອດຂາຍເງິນສົດ</span>
+            <strong id="p-a4-val-cash-rev" style="color:var(--success);">0 ₭</strong>
         </div>
         <div class="a4-summary-box">
-            <span>ຮັບເງິນໂອນ (Transfer)</span>
-            <strong id="p-a4-val-transfer-rev">0 ₭</strong>
+            <span>ຍອດຂາຍເງິນໂອນ</span>
+            <strong id="p-a4-val-transfer-rev" style="color:var(--info);">0 ₭</strong>
         </div>
         <div class="a4-summary-box primary">
-            <span>ລວມຍອດເງິນທັງໝົດ</span>
+            <span>ລວມຍອດຂາຍທັງໝົດ</span>
             <strong id="p-a4-val-total-rev">0 ₭</strong>
         </div>
     </div>
@@ -167,9 +162,9 @@
         <thead>
             <tr>
                 <th style="width: 50px;" class="text-center">ລຳດັບ</th>
-                <th>ປະເພດການຈ່າຍເງິນ / Payment Method</th>
-                <th style="width: 140px;" class="text-center">ຈຳນວນລາຍການ (ບິນ)</th>
-                <th style="width: 180px;" class="text-right">ລວມເງິນ (₭)</th>
+                <th>ປະເພດການຊຳລະ (Payment Method)</th>
+                <th style="width: 150px;" class="text-center">ຈຳນວນບິນ (Transactions)</th>
+                <th style="width: 200px;" class="text-right">ລວມຈຳນວນເງິນ (₭)</th>
             </tr>
         </thead>
         <tbody id="ptable-revenue-a4">
@@ -197,17 +192,14 @@
 
 <script>
 $(document).ready(function() {
-    function generateRevenueData() {
-        return [
-            { method: 'ເງິນສົດ (Cash)', code: 'cash', count: Math.floor(Math.random() * 50) + 10, amount: Math.floor(Math.random() * 5000000) + 1000000 },
-            { method: 'ເງິນໂອນບັນຊີ BCEL', code: 'transfer', count: Math.floor(Math.random() * 80) + 20, amount: Math.floor(Math.random() * 12000000) + 5000000 },
-            { method: 'ເງິນໂອນບັນຊີ JDB', code: 'transfer', count: Math.floor(Math.random() * 15) + 1, amount: Math.floor(Math.random() * 2000000) + 100000 },
-            { method: 'ບັດເຄຣດິດ/ເດບິດ', code: 'card', count: Math.floor(Math.random() * 5), amount: Math.floor(Math.random() * 1000000) }
-        ];
-    }
+    var revenueData = [
+        { method: 'ເງິນສົດ (Cash)', type: 'cash', count: 85, amount: 2795694 },
+        { name: 'ເງິນໂອນ (BCEL One)', method: 'ເງິນໂອນ BCEL One', type: 'transfer', count: 167, amount: 7784013 },
+        { name: 'ເງິນໂອນ (JDB)', method: 'ເງິນໂອນ JDB', type: 'transfer', count: 12, amount: 1423535 },
+        { name: 'ບັດເຄຣດິດ/ເດບິດ', method: 'ບັດເຄຣດິດ/ເດບິດ', type: 'transfer', count: 3, amount: 204434 }
+    ];
 
     function renderRevenue() {
-        const data = generateRevenueData(); // generate new data on each search to simulate backend refresh
         let html = '';
         let printHtml = '';
         let printA4Html = '';
@@ -217,23 +209,21 @@ $(document).ready(function() {
         let totalCount = 0;
         let idx = 1;
 
-        data.forEach(row => {
-            if(row.amount === 0) return;
-            
+        revenueData.forEach(row => {
+            if (row.type === 'cash') totalCash += row.amount;
+            if (row.type === 'transfer') totalTransfer += row.amount;
             totalOverall += row.amount;
             totalCount += row.count;
-            if (row.code === 'cash') totalCash += row.amount;
-            else totalTransfer += row.amount; 
-            
-            const badgeClass = row.code === 'cash' ? 'cash' : 'transfer';
-            
+
+            const methodIcon = row.type === 'cash' ? 'bi-cash-coin text-success' : 'bi-credit-card text-primary';
+
             html += `<tr>
                 <td style="color:var(--text-muted)">${idx}</td>
-                <td style="font-weight:600;"><span class="badge ${badgeClass}" style="margin-right: 10px;">${row.code.toUpperCase()}</span> ${row.method}</td>
-                <td class="text-center" style="font-size:16px;">${row.count}</td>
-                <td class="text-right font-weight-bold" style="color:var(--text-main); font-weight:700;">${formatCurrency(row.amount)}</td>
+                <td style="font-weight:600;"><i class="bi ${methodIcon}" style="margin-right:8px;"></i>${row.method}</td>
+                <td class="text-center" style="font-size:16px; font-weight:700;">${row.count} ບິນ</td>
+                <td class="text-right font-weight-bold" style="color:var(--text-main); font-size:15px;">${formatCurrency(row.amount)}</td>
             </tr>`;
-            
+
             printHtml += `<tr>
                 <td>
                     ${idx}. ${row.method}
@@ -251,7 +241,7 @@ $(document).ready(function() {
             idx++;
         });
 
-        if (data.length > 0) {
+        if (revenueData.length > 0) {
             printA4Html += `<tr class="total-row">
                 <td colspan="2" class="text-right" style="font-weight:bold;">ລວມທັງໝົດ:</td>
                 <td class="text-center" style="font-weight:bold;">${totalCount} ບິນ</td>
@@ -284,4 +274,3 @@ $(document).ready(function() {
     });
 });
 </script>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
