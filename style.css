@@ -255,6 +255,13 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
         margin: 10mm;
     }
 
+    /* Completely disable body background decoration & pseudo-elements during print */
+    body::before, body::after, .container::before, .container::after {
+        display: none !important;
+        content: none !important;
+        background: none !important;
+    }
+
     /* Completely collapse screen-only elements so they occupy 0 height and prevent blank pages */
     .tabs-wrapper,
     .filters-bar,
@@ -267,10 +274,12 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
     body * { visibility: hidden; }
     .active-print, .active-print *, .active-print-a4, .active-print-a4 * { visibility: visible; }
     
-    body {
-        background: #fff;
-        margin: 0;
-        padding: 0;
+    html, body, .container, #content-area {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
