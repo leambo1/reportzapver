@@ -35,11 +35,23 @@ function printReceipt(containerId, isA4 = false) {
     const nowStr = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-GB');
     $('.p-print-now').text(nowStr);
 
+    // Remove old dynamic print page style if any
+    $('#dynamic-print-page-style').remove();
+
+    let pageRule = '';
     if (isA4) {
+        pageRule = '@page { size: A4 portrait; margin: 10mm; }';
         $('#' + containerId).addClass('active-print-a4');
     } else {
+        pageRule = '@page { size: 80mm 297mm; margin: 0; }';
         $('#' + containerId).addClass('active-print');
     }
+
+    // Inject exact page size rule for the current print mode
+    $('<style id="dynamic-print-page-style">')
+        .text(pageRule)
+        .appendTo('head');
+
     window.print();
 }
 

@@ -250,11 +250,6 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
 .print-area, .print-area-a4 { display: none; }
 
 @media print {
-    @page {
-        size: A4 portrait;
-        margin: 10mm;
-    }
-
     /* Completely disable body background decoration & pseudo-elements during print */
     body::before, body::after, .container::before, .container::after {
         display: none !important;
