@@ -1,0 +1,674 @@
+<!-- Filters Bar -->
+<div class="filters-bar">
+    <div class="filter-group">
+        <label>ຈາກວັນທີ</label>
+        <input type="date" id="rs_start" value="2026-07-27">
+    </div>
+    <div class="filter-group">
+        <label>ຫາວັນທີ</label>
+        <input type="date" id="rs_end" value="2026-07-27">
+    </div>
+    <div class="filter-group">
+        <label>ຄົ້ນຫາເລກບິນ</label>
+        <input type="text" id="rs_search" placeholder="ພິມເພື່ອຄົ້ນຫາ...">
+    </div>
+    <div class="filter-group">
+        <label>ຜູ້ຂາຍ</label>
+        <select id="rs_seller">
+            <option value="">ທັງໝົດ</option>
+            <option value="ນ. ສີວັນ">ນ. ສີວັນ</option>
+            <option value="ທ. ບຸນມີ">ທ. ບຸນມີ</option>
+            <option value="ນ. ຈັນເພັງ">ນ. ຈັນເພັງ</option>
+            <option value="ທ. ອຸໄທ">ທ. ອຸໄທ</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <label>ປະເພດການຈ່າຍ</label>
+        <select id="rs_type">
+            <option value="">ທັງໝົດ</option>
+            <option value="ສົດ">ເງິນສົດ</option>
+            <option value="ໂອນ">ເງິນໂອນ</option>
+        </select>
+    </div>
+    <button class="btn btn-search" id="btn-search-sales">
+        <i class="bi bi-search"></i> ຄົ້ນຫາ
+    </button>
+    <button class="btn btn-print" onclick="printReceipt('print-sales')">
+        <i class="bi bi-printer"></i> ພິມລາຍງານ (80mm)
+    </button>
+    <button class="btn btn-print-a4" onclick="printReceipt('print-sales-a4', true)">
+        <i class="bi bi-file-earmark-pdf"></i> ພິມລາຍງານ (A4)
+    </button>
+</div>
+
+<!-- Summary Cards -->
+<div class="summary-cards">
+    <div class="card">
+        <div class="card-icon blue"><i class="bi bi-receipt"></i></div>
+        <div class="card-info">
+            <span class="card-label">ຈຳນວນບິນຂາຍ</span>
+            <span class="card-value" id="card-total-bills">0 ບິນ</span>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-icon green"><i class="bi bi-box-seam"></i></div>
+        <div class="card-info">
+            <span class="card-label">ຈຳນວນລາຍການ</span>
+            <span class="card-value" id="card-total-items">0 ລາຍການ</span>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-icon orange"><i class="bi bi-wallet2"></i></div>
+        <div class="card-info">
+            <span class="card-label">ລວມເງິນຂາຍ</span>
+            <span class="card-value" id="card-total-sales">0 ₭</span>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-icon purple"><i class="bi bi-tag"></i></div>
+        <div class="card-info">
+            <span class="card-label">ລວມສ່ວນຫຼຸດ</span>
+            <span class="card-value" id="card-total-discount">0 ₭</span>
+        </div>
+    </div>
+</div>
+
+<!-- Data Table -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ລຳດັບ</th>
+                <th>ວັນທີ & ເວລາ</th>
+                <th>ເລກບິນ</th>
+                <th>ຜູ້ຂາຍ</th>
+                <th class="text-center">ຈຳນວນລາຍການ</th>
+                <th class="text-center">ປະເພດຈ່າຍ</th>
+                <th class="text-right">ສ່ວນຫຼຸດ</th>
+                <th class="text-right">ລວມເງິນ (₭)</th>
+                <th class="text-center">ສະຖານະ</th>
+                <th class="text-center">ຈັດການ</th>
+            </tr>
+        </thead>
+        <tbody id="tbody-sales"></tbody>
+    </table>
+</div>
+
+<!-- Modal for Bill Details -->
+<div class="modal-overlay" id="billModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>ລາຍລະອຽດໃບບິນ</h3>
+            <button class="btn-close" onclick="closeModal()"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="bill-info">
+                <div>
+                    <p><strong>ເລກບິນ:</strong> <span id="m_invoice"></span></p>
+                    <p><strong>ວັນທີ:</strong> <span id="m_date"></span></p>
+                    <p><strong>ຜູ້ຂາຍ:</strong> <span id="m_seller"></span></p>
+                </div>
+                <div>
+                    <p><strong>ປະເພດຈ່າຍ:</strong> <span id="m_type"></span></p>
+                    <p><strong>ສະຖານະ:</strong> <span id="m_status"></span></p>
+                    <p><strong>ລວມເງິນ:</strong> <span id="m_amount" style="color:var(--info); font-weight:bold;"></span></p>
+                </div>
+            </div>
+            
+            <table style="width:100%; font-size:13.5px;">
+                <thead>
+                    <tr style="background: #f1f5f9;">
+                        <th style="padding:10px; border:none; text-align:center; width:50px; border-radius: 8px 0 0 8px;">ລຳດັບ</th>
+                        <th style="padding:10px; border:none;">ລາຍການສິນຄ້າ</th>
+                        <th style="padding:10px; border:none; text-align:center;">ຈຳນວນ</th>
+                        <th style="padding:10px; border:none; text-align:right;">ລາຄາລວມ</th>
+                    </tr>
+                </thead>
+                <tbody id="m_items">
+                    <!-- Loaded via JS -->
+                </tbody>
+            </table>
+            
+            <div style="text-align:right; margin-top:20px; display:flex; justify-content:flex-end; gap:8px;">
+                <button class="btn btn-print" id="btn-reprint" style="display:inline-flex;">
+                    <i class="bi bi-printer"></i> ພິມໃບບິນຄືນ (80mm)
+                </button>
+                <button class="btn btn-print-a4" id="btn-reprint-a4" style="display:inline-flex;">
+                    <i class="bi bi-file-earmark-pdf"></i> ພິມໃບບິນ A4
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Print 80mm Template for Single Bill -->
+<div id="print-single-bill" class="print-area">
+    <svg class="r-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="4 2"/>
+        <text x="50" y="55" font-family="sans-serif" font-weight="bold" font-size="20" font-style="italic" text-anchor="middle" fill="#000">ZapVer</text>
+    </svg>
+
+    <div class="r-header">
+        <h2>ບິນຮັບເງິນ (Receipt)</h2>
+        <p>ຮ້ານ ZapVer POS</p>
+    </div>
+    
+    <div class="r-divider"></div>
+
+    <div class="r-info">
+        <div class="r-info-row">
+            <span>ເລກບິນ (Bill No)</span>
+            <span id="pb_invoice"></span>
+        </div>
+        <div class="r-info-row">
+            <span>ວັນທີ (Date)</span>
+            <span id="pb_date"></span>
+        </div>
+        <div class="r-info-row">
+            <span>ຜູ້ຂາຍ (Cashier)</span>
+            <span id="pb_seller"></span>
+        </div>
+        <div class="r-info-row">
+            <span>ປະເພດການຈ່າຍ</span>
+            <span id="pb_type"></span>
+        </div>
+    </div>
+
+    <div class="r-divider"></div>
+
+    <table class="r-table">
+        <thead>
+            <tr>
+                <th>ລາຍການ</th>
+                <th class="right">ລວມ</th>
+            </tr>
+        </thead>
+        <tbody id="pb_items">
+            <!-- populated by js -->
+        </tbody>
+    </table>
+
+    <div class="r-totals">
+        <div class="r-total-row">
+            <span>ສ່ວນຫຼຸດ (Discount)</span>
+            <span id="pb_discount">0</span>
+        </div>
+    </div>
+    
+    <div class="r-divider-bold"></div>
+    
+    <div class="r-totals">
+        <div class="r-total-row grand-total">
+            <span>ຍອດລວມ (Total)</span>
+            <span id="pb_total">0 ₭</span>
+        </div>
+    </div>
+
+    <div class="r-divider"></div>
+    
+    <div class="r-footer">
+        <p>** ຂອບໃຈທີ່ອຸດໜູນ **</p>
+        <p>Thank You For Using ZapVer</p>
+        <p style="font-size: 10px; margin-top: 5px;">(ພິມຄືນ / Reprint)</p>
+    </div>
+</div>
+
+<!-- Print A4 Template for Single Bill -->
+<div id="print-single-bill-a4" class="print-area-a4">
+    <div class="a4-header">
+        <div class="a4-brand">
+            <svg class="a4-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#f26522" stroke-width="4"/>
+                <text x="50" y="58" font-family="sans-serif" font-weight="bold" font-size="22" font-style="italic" text-anchor="middle" fill="#f26522">ZapVer</text>
+            </svg>
+            <div>
+                <h2>ຮ້ານ ZapVer POS</h2>
+                <p>ໃບບິນຮັບເງິນ / Official Receipt (A4)</p>
+            </div>
+        </div>
+        <div class="a4-meta">
+            <p><strong>ເລກບິນ:</strong> <span id="pb_a4_invoice"></span></p>
+            <p><strong>ວັນທີ:</strong> <span id="pb_a4_date"></span></p>
+            <p><strong>ຜູ້ຂາຍ:</strong> <span id="pb_a4_seller"></span></p>
+            <p><strong>ປະເພດຈ່າຍ:</strong> <span id="pb_a4_type"></span></p>
+        </div>
+    </div>
+
+    <table class="a4-table">
+        <thead>
+            <tr>
+                <th style="width: 50px;" class="text-center">ລຳດັບ</th>
+                <th>ລາຍການສິນຄ້າ / Item Description</th>
+                <th style="width: 100px;" class="text-center">ຈຳນວນ</th>
+                <th style="width: 130px;" class="text-right">ລາຄາ/ໜ່ວຍ (₭)</th>
+                <th style="width: 150px;" class="text-right">ລາຄາລວມ (₭)</th>
+            </tr>
+        </thead>
+        <tbody id="pb_a4_items">
+            <!-- populated by js -->
+        </tbody>
+    </table>
+
+    <div class="a4-totals-wrapper">
+        <div class="a4-totals-table">
+            <div class="row">
+                <span>ສ່ວນຫຼຸດ (Discount):</span>
+                <span id="pb_a4_discount">0 ₭</span>
+            </div>
+            <div class="row grand">
+                <span>ຍອດລວມທັງໝົດ (Grand Total):</span>
+                <span id="pb_a4_total">0 ₭</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="a4-signatures">
+        <div class="sig-box">
+            <p>ລູກຄ້າ (Customer)</p>
+            <div class="sig-line"></div>
+            <span>ວັນທີ: ____/____/________</span>
+        </div>
+        <div class="sig-box">
+            <p>ຜູ້ຮັບເງິນ (Cashier)</p>
+            <div class="sig-line"></div>
+            <span>ວັນທີ: ____/____/________</span>
+        </div>
+    </div>
+
+    <div class="a4-footer">
+        <p>** ຂອບໃຈທີ່ອຸດໜູນ ZapVer POS **</p>
+    </div>
+</div>
+
+<!-- Print 80mm Template (Hidden) styled like Zapver Receipt -->
+<div id="print-sales" class="print-area">
+    <svg class="r-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="4 2"/>
+        <text x="50" y="55" font-family="sans-serif" font-weight="bold" font-size="20" font-style="italic" text-anchor="middle" fill="#000">ZapVer</text>
+    </svg>
+
+    <div class="r-header">
+        <h2>ລາຍງານການຂາຍ (ບິນ)</h2>
+        <p>ZapVer POS</p>
+    </div>
+    
+    <div class="r-divider"></div>
+
+    <div class="r-info">
+        <div class="r-info-row">
+            <span>ວັນທີພິມ (Print Date)</span>
+            <span>27/07/2026 17:30:15</span>
+        </div>
+        <div class="r-info-row">
+            <span>ຊ່ວງວັນທີ (Date Range)</span>
+            <span id="p-date-sales"></span>
+        </div>
+        <div class="r-info-row">
+            <span>ພະນັກງານພິມ (Staff)</span>
+            <span>Admin</span>
+        </div>
+    </div>
+
+    <table class="r-table">
+        <thead>
+            <tr>
+                <th>ລາຍການ (Description)</th>
+                <th class="right">ລວມ (Total)</th>
+            </tr>
+        </thead>
+        <tbody id="ptable-sales">
+            <!-- populated by js -->
+        </tbody>
+    </table>
+
+    <div class="r-totals">
+        <div class="r-total-row">
+            <span>ລວມຈຳນວນບິນ (Bills QTY)</span>
+            <span id="ptotal-qty-sales">0</span>
+        </div>
+    </div>
+    
+    <div class="r-divider-bold"></div>
+    
+    <div class="r-totals">
+        <div class="r-total-row grand-total">
+            <span>ຍອດເງິນ (Amount)</span>
+            <span id="ptotal-sales">0 ₭</span>
+        </div>
+    </div>
+
+    <div class="r-divider"></div>
+    
+    <div class="r-footer">
+        <p>ສະຫຼຸບລາຍງານການຂາຍ</p>
+        <p>Thank You For Using ZapVer</p>
+    </div>
+</div>
+
+<!-- Print A4 Template for Sales Report -->
+<div id="print-sales-a4" class="print-area-a4">
+    <div class="a4-header">
+        <div class="a4-brand">
+            <svg class="a4-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#f26522" stroke-width="4"/>
+                <text x="50" y="58" font-family="sans-serif" font-weight="bold" font-size="22" font-style="italic" text-anchor="middle" fill="#f26522">ZapVer</text>
+            </svg>
+            <div>
+                <h2>ຮ້ານ ZapVer POS</h2>
+                <p>ລາຍງານການຂາຍປະຈຳວັນ / Sales Summary Report (A4)</p>
+            </div>
+        </div>
+        <div class="a4-meta">
+            <p><strong>ວັນທີພິມ:</strong> <span class="p-print-now"></span></p>
+            <p><strong>ຊ່ວງວັນທີ:</strong> <span id="p-a4-date-sales"></span></p>
+            <p><strong>ຜູ້ອອກລາຍງານ:</strong> Admin</p>
+        </div>
+    </div>
+
+    <div class="a4-summary-grid">
+        <div class="a4-summary-box">
+            <span>ຈຳນວນບິນຂາຍ</span>
+            <strong id="p-a4-total-bills">0 ບິນ</strong>
+        </div>
+        <div class="a4-summary-box">
+            <span>ຈຳນວນລາຍການ</span>
+            <strong id="p-a4-total-items">0 ລາຍການ</strong>
+        </div>
+        <div class="a4-summary-box">
+            <span>ລວມສ່ວນຫຼຸດ</span>
+            <strong id="p-a4-total-discount">0 ₭</strong>
+        </div>
+        <div class="a4-summary-box primary">
+            <span>ລວມຍອດຂາຍທັງໝົດ</span>
+            <strong id="p-a4-total-sales">0 ₭</strong>
+        </div>
+    </div>
+
+    <table class="a4-table">
+        <thead>
+            <tr>
+                <th style="width: 40px;" class="text-center">ລຳດັບ</th>
+                <th style="width: 130px;">ວັນທີ & ເວລາ</th>
+                <th>ເລກບິນ</th>
+                <th>ຜູ້ຂາຍ</th>
+                <th class="text-center">ຈຳນວນ</th>
+                <th class="text-center">ປະເພດຈ່າຍ</th>
+                <th class="text-right">ສ່ວນຫຼຸດ</th>
+                <th class="text-right">ລວມເງິນ (₭)</th>
+                <th class="text-center">ສະຖານະ</th>
+            </tr>
+        </thead>
+        <tbody id="ptable-sales-a4">
+            <!-- populated by JS -->
+        </tbody>
+    </table>
+
+    <div class="a4-signatures">
+        <div class="sig-box">
+            <p>ຜູ້ຈັດການ (Manager)</p>
+            <div class="sig-line"></div>
+            <span>ວັນທີ: ____/____/________</span>
+        </div>
+        <div class="sig-box">
+            <p>ຜູ້ອອກລາຍງານ (Reported By)</p>
+            <div class="sig-line"></div>
+            <span>ວັນທີ: ____/____/________</span>
+        </div>
+    </div>
+
+    <div class="a4-footer">
+        <p>ZapVer POS Management System - Document Generated Automatically</p>
+    </div>
+</div>
+
+<script>
+// Make salesData global so modal can access it easily
+var salesData = Array.from({length: 20}, (_, i) => {
+    const isCash = Math.random() > 0.5;
+    const amount = Math.floor(Math.random() * 800000) + 20000;
+    const discount = Math.random() > 0.7 ? Math.floor(amount * 0.1) : 0;
+    const h = 20 - Math.floor(i / 2);
+    const m = Math.floor(Math.random() * 60);
+    
+    // Generate some fake items for the bill details modal
+    const numItems = Math.floor(Math.random() * 4) + 1;
+    const billItems = [];
+    for(let j=0; j<numItems; j++){
+        billItems.push({
+            name: ['ເບຍລາວ ໃຫຍ່', 'ຕຳໝາກຫຸ່ງ', 'ປາໜຶ້ງໝາກນາວ', 'ເຂົ້າຜັດ', 'ນ້ຳປັ່ນ'][Math.floor(Math.random()*5)],
+            qty: Math.floor(Math.random()*3) + 1,
+            price: Math.floor(Math.random()*40000) + 10000
+        });
+    }
+
+    return {
+        id: i,
+        date: `27/07/2026 ${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`,
+        invoice: `INV-2607-${(100 - i).toString().padStart(3, '0')}`,
+        seller: ['ນ. ສີວັນ', 'ທ. ບຸນມີ', 'ນ. ຈັນເພັງ', 'ທ. ອຸໄທ'][Math.floor(Math.random()*4)],
+        itemsCount: numItems,
+        items: billItems,
+        type: isCash ? 'ສົດ' : 'ໂອນ',
+        discount: discount,
+        amount: amount,
+        status: Math.random() > 0.1 ? 'ສຳເລັດ' : 'ຍົກເລີກ'
+    };
+});
+
+function openModal(index) {
+    const bill = salesData[index];
+    
+    // Populate UI Modal
+    $('#m_invoice').text(bill.invoice);
+    $('#m_date').text(bill.date);
+    $('#m_seller').text(bill.seller);
+    $('#m_type').text('ເງິນ' + bill.type);
+    
+    const statusColor = bill.status === 'ສຳເລັດ' ? 'var(--success)' : 'red';
+    $('#m_status').html(`<span style="color:${statusColor}; font-weight:bold;">${bill.status}</span>`);
+    $('#m_amount').text(formatCurrency(bill.amount) + ' ₭');
+    
+    // Populate Print Template (80mm & A4)
+    $('#pb_invoice, #pb_a4_invoice').text(bill.invoice);
+    $('#pb_date, #pb_a4_date').text(bill.date);
+    $('#pb_seller, #pb_a4_seller').text(bill.seller);
+    $('#pb_type, #pb_a4_type').text('ເງິນ' + bill.type);
+    $('#pb_total, #pb_a4_total').text(formatCurrency(bill.amount) + ' ₭');
+    $('#pb_discount, #pb_a4_discount').text(formatCurrency(bill.discount) + ' ₭');
+    
+    let itemsHtml = '';
+    let pItemsHtml = '';
+    let pA4ItemsHtml = '';
+    let itemIdx = 1;
+    
+    bill.items.forEach(it => {
+        // UI row
+        itemsHtml += `
+        <tr>
+            <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; color:var(--text-muted); font-size:12.5px;">${itemIdx}</td>
+            <td style="padding:10px; border-bottom:1px solid #eee;">${it.name}<br><small style="color:#888;">${formatCurrency(it.price)} ₭</small></td>
+            <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; font-weight:bold;">${it.qty}</td>
+            <td style="padding:10px; border-bottom:1px solid #eee; text-align:right; font-weight:bold; color:var(--text-main);">${formatCurrency(it.qty * it.price)}</td>
+        </tr>`;
+        
+        // Print row (80mm)
+        pItemsHtml += `
+        <tr>
+            <td>
+                ${it.name}
+                <span class="r-item-sub">${it.qty} x ${formatCurrency(it.price)}</span>
+            </td>
+            <td class="right">${formatCurrency(it.qty * it.price)}</td>
+        </tr>`;
+
+        // Print row (A4)
+        pA4ItemsHtml += `
+        <tr>
+            <td class="text-center">${itemIdx}</td>
+            <td>${it.name}</td>
+            <td class="text-center">${it.qty}</td>
+            <td class="text-right">${formatCurrency(it.price)} ₭</td>
+            <td class="text-right" style="font-weight:bold;">${formatCurrency(it.qty * it.price)} ₭</td>
+        </tr>`;
+
+        itemIdx++;
+    });
+    
+    if(bill.discount > 0) {
+        itemsHtml += `
+        <tr>
+            <td colspan="3" style="padding:10px; text-align:right; color:var(--primary);">ສ່ວນຫຼຸດ</td>
+            <td style="padding:10px; text-align:right; color:var(--primary); font-weight:bold;">-${formatCurrency(bill.discount)}</td>
+        </tr>`;
+    }
+
+    $('#m_items').html(itemsHtml);
+    $('#pb_items').html(pItemsHtml);
+    $('#pb_a4_items').html(pA4ItemsHtml);
+    
+    // Bind print buttons
+    $('#btn-reprint').off('click').on('click', function() {
+        printReceipt('print-single-bill');
+    });
+    $('#btn-reprint-a4').off('click').on('click', function() {
+        printReceipt('print-single-bill-a4', true);
+    });
+
+    $('#billModal').addClass('active');
+}
+
+function closeModal() {
+    $('#billModal').removeClass('active');
+}
+
+$(document).ready(function() {
+    // Close modal on outside click
+    $('#billModal').on('click', function(e) {
+        if(e.target === this) closeModal();
+    });
+
+    function renderSales() {
+        const typeFilter = $('#rs_type').val();
+        const sellerFilter = $('#rs_seller').val();
+        const searchFilter = $('#rs_search').val().toLowerCase();
+        
+        let html = '';
+        let printHtml = '';
+        let printA4Html = '';
+        let total = 0;
+        let totalItems = 0;
+        let totalDiscount = 0;
+        let count = 0;
+        let idx = 1;
+
+        salesData.forEach((row, index) => {
+            if (typeFilter && row.type !== typeFilter) return;
+            if (sellerFilter && row.seller !== sellerFilter) return;
+            if (searchFilter && !row.invoice.toLowerCase().includes(searchFilter)) return;
+            
+            if (row.status === 'ສຳເລັດ') {
+                total += row.amount; // Only sum successful bills
+                totalItems += row.itemsCount;
+                totalDiscount += row.discount;
+            }
+            count++;
+            
+            const badgeClass = row.type === 'ສົດ' ? 'cash' : 'transfer';
+            const statusBadge = row.status === 'ສຳເລັດ' ? '<span class="badge" style="background:rgba(5,205,153,0.1); color:var(--success);">ສຳເລັດ</span>' : '<span class="badge" style="background:rgba(255,0,0,0.1); color:red;">ຍົກເລີກ</span>';
+            const discountTxt = row.discount > 0 ? `<span style="color:var(--primary)">-${formatCurrency(row.discount)}</span>` : '-';
+
+            html += `<tr>
+                <td style="color:var(--text-muted)">${idx}</td>
+                <td style="font-size: 13px;">${row.date}</td>
+                <td style="color:var(--info); font-weight:600;">${row.invoice}</td>
+                <td><i class="bi bi-person-circle" style="color:var(--text-muted); margin-right:5px;"></i>${row.seller}</td>
+                <td class="text-center">${row.itemsCount}</td>
+                <td class="text-center"><span class="badge ${badgeClass}">${row.type === 'ສົດ' ? 'ເງິນສົດ' : 'ເງິນໂອນ'}</span></td>
+                <td class="text-right">${discountTxt}</td>
+                <td class="text-right font-weight-bold" style="font-weight:700;">${formatCurrency(row.amount)}</td>
+                <td class="text-center">${statusBadge}</td>
+                <td class="text-center">
+                    <button class="btn-action" onclick="openModal(${index})">
+                        <i class="bi bi-eye"></i> ເບິ່ງ
+                    </button>
+                </td>
+            </tr>`;
+            
+            if (row.status === 'ສຳເລັດ') {
+                printHtml += `<tr>
+                    <td>
+                        ${idx}. ${row.invoice}
+                        <span class="r-item-sub">ຜູ້ຂາຍ: ${row.seller}</span>
+                    </td>
+                    <td class="right">${formatCurrency(row.amount)}</td>
+                </tr>`;
+
+                printA4Html += `<tr>
+                    <td class="text-center">${idx}</td>
+                    <td>${row.date}</td>
+                    <td style="font-weight:bold; color:var(--info);">${row.invoice}</td>
+                    <td>${row.seller}</td>
+                    <td class="text-center">${row.itemsCount}</td>
+                    <td class="text-center">${row.type === 'ສົດ' ? 'ເງິນສົດ' : 'ເງິນໂອນ'}</td>
+                    <td class="text-right">${row.discount > 0 ? '-' + formatCurrency(row.discount) : '-'}</td>
+                    <td class="text-right" style="font-weight:bold;">${formatCurrency(row.amount)}</td>
+                    <td class="text-center">${row.status}</td>
+                </tr>`;
+            }
+            idx++;
+        });
+
+        if(html === '') {
+            html = '<tr><td colspan="10" class="text-center" style="padding: 30px; color: var(--text-muted);">ບໍ່ພົບຂໍ້ມູນການຂາຍ</td></tr>';
+            printHtml += '<tr><td colspan="2" style="text-align:center">ບໍ່ພົບຂໍ້ມູນ</td></tr>';
+            printA4Html += '<tr><td colspan="9" class="text-center">ບໍ່ພົບຂໍ້ມູນ</td></tr>';
+        } else {
+            const discStr = totalDiscount > 0 ? `<span style="color:var(--primary); font-weight:bold;">-${formatCurrency(totalDiscount)}</span>` : '-';
+            html += `<tr style="background: rgba(242, 101, 34, 0.06); font-weight: bold; border-top: 2px solid rgba(242, 101, 34, 0.2);">
+                <td colspan="4" class="text-right" style="font-weight:bold; color:var(--text-main);">ລວມທັງໝົດ:</td>
+                <td class="text-center" style="font-size:15px; font-weight:bold; color:var(--primary);">${totalItems}</td>
+                <td class="text-center">-</td>
+                <td class="text-right">${discStr}</td>
+                <td class="text-right" style="font-size:16px; font-weight:bold; color:var(--primary);">${formatCurrency(total)} ₭</td>
+                <td colspan="2" class="text-center" style="color:var(--text-muted); font-size:12px;">(${count} ບິນ)</td>
+            </tr>`;
+
+            printA4Html += `<tr class="total-row">
+                <td colspan="4" class="text-right" style="font-weight:bold;">ລວມທັງໝົດ:</td>
+                <td class="text-center">${totalItems}</td>
+                <td class="text-center">-</td>
+                <td class="text-right">${totalDiscount > 0 ? '-' + formatCurrency(totalDiscount) : '-'}</td>
+                <td class="text-right" style="font-weight:bold;">${formatCurrency(total)} ₭</td>
+                <td class="text-center">(${count} ບິນ)</td>
+            </tr>`;
+        }
+
+        $('#tbody-sales').html(html);
+        $('#ptable-sales').html(printHtml);
+        $('#ptable-sales-a4').html(printA4Html);
+        $('#ptotal-sales').text(formatCurrency(total) + ' ₭');
+        $('#ptotal-qty-sales').text(count);
+        
+        // Update summary cards & A4 summary boxes
+        $('#card-total-bills, #p-a4-total-bills').text(count + ' ບິນ');
+        $('#card-total-items, #p-a4-total-items').text(totalItems + ' ລາຍການ');
+        $('#card-total-sales, #p-a4-total-sales').text(formatCurrency(total) + ' ₭');
+        $('#card-total-discount, #p-a4-total-discount').text(formatCurrency(totalDiscount) + ' ₭');
+        
+        const sd = $('#rs_start').val();
+        const ed = $('#rs_end').val();
+        $('#p-date-sales, #p-a4-date-sales').text(`${sd} - ${ed}`);
+    }
+
+    renderSales();
+    $('#btn-search-sales').on('click', renderSales);
+    $('#rs_type, #rs_seller, #rs_search').on('change keyup', function(e) {
+        if(e.type === 'keyup' && e.key !== 'Enter') return;
+        renderSales();
+    });
+});
+</script>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

@@ -1,0 +1,278 @@
+<!-- Filters Bar -->
+<div class="filters-bar">
+    <div class="filter-group">
+        <label>ຈາກວັນທີ</label>
+        <input type="date" id="rp_start" value="2026-07-27">
+    </div>
+    <div class="filter-group">
+        <label>ຫາວັນທີ</label>
+        <input type="date" id="rp_end" value="2026-07-27">
+    </div>
+    <div class="filter-group">
+        <label>ຄົ້ນຫາຊື່ສິນຄ້າ</label>
+        <input type="text" id="rp_search" placeholder="ພິມຊື່ສິນຄ້າ...">
+    </div>
+    <div class="filter-group">
+        <label>ໝວດໝູ່</label>
+        <select id="rp_category">
+            <option value="">ທັງໝົດ</option>
+            <option value="ອາຫານ">ອາຫານ</option>
+            <option value="ເຄື່ອງດື່ມ">ເຄື່ອງດື່ມ</option>
+            <option value="ບໍລິການ">ບໍລິການ</option>
+        </select>
+    </div>
+    <button class="btn btn-search" id="btn-search-products">
+        <i class="bi bi-search"></i> ຄົ້ນຫາ
+    </button>
+    <button class="btn btn-print" onclick="printReceipt('print-products')">
+        <i class="bi bi-printer"></i> ພິມລາຍງານ (80mm)
+    </button>
+    <button class="btn btn-print-a4" onclick="printReceipt('print-products-a4', true)">
+        <i class="bi bi-file-earmark-pdf"></i> ພິມລາຍງານ (A4)
+    </button>
+</div>
+
+<!-- Data Table -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ລຳດັບ</th>
+                <th>ຊື່ສິນຄ້າ / ບໍລິການ</th>
+                <th>ໝວດໝູ່</th>
+                <th class="text-center">ຈຳນວນຂາຍໄດ້</th>
+                <th class="text-right">ລວມເງິນ (₭)</th>
+            </tr>
+        </thead>
+        <tbody id="tbody-products"></tbody>
+    </table>
+</div>
+
+<!-- Print 80mm Template (Hidden) styled like Zapver Receipt -->
+<div id="print-products" class="print-area">
+    <svg class="r-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="4 2"/>
+        <text x="50" y="55" font-family="sans-serif" font-weight="bold" font-size="20" font-style="italic" text-anchor="middle" fill="#000">ZapVer</text>
+    </svg>
+
+    <div class="r-header">
+        <h2>ລາຍງານສິນຄ້າຂາຍດີ</h2>
+        <p>ZapVer POS</p>
+    </div>
+    
+    <div class="r-divider"></div>
+
+    <div class="r-info">
+        <div class="r-info-row">
+            <span>ວັນທີພິມ (Print Date)</span>
+            <span>27/07/2026 17:30:15</span>
+        </div>
+        <div class="r-info-row">
+            <span>ຊ່ວງວັນທີ (Date Range)</span>
+            <span id="p-date-products"></span>
+        </div>
+    </div>
+
+    <table class="r-table">
+        <thead>
+            <tr>
+                <th>ລາຍການ (Description)</th>
+                <th class="right">ລວມ (Total)</th>
+            </tr>
+        </thead>
+        <tbody id="ptable-products">
+            <!-- populated by js -->
+        </tbody>
+    </table>
+
+    <div class="r-totals">
+        <div class="r-total-row">
+            <span>ລວມຈຳນວນສິນຄ້າ (QTY)</span>
+            <span id="ptotal-qty-products">0</span>
+        </div>
+    </div>
+    
+    <div class="r-divider-bold"></div>
+    
+    <div class="r-totals">
+        <div class="r-total-row grand-total">
+            <span>ຍອດຂາຍລວມ (Amount)</span>
+            <span id="ptotal-products">0 ₭</span>
+        </div>
+    </div>
+
+    <div class="r-divider"></div>
+    
+    <div class="r-footer">
+        <p>ສະຫຼຸບລາຍງານສິນຄ້າ</p>
+        <p>Thank You For Using ZapVer</p>
+    </div>
+</div>
+
+<!-- Print A4 Template for Products Report -->
+<div id="print-products-a4" class="print-area-a4">
+    <div class="a4-header">
+        <div class="a4-brand">
+            <svg class="a4-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#f26522" stroke-width="4"/>
+                <text x="50" y="58" font-family="sans-serif" font-weight="bold" font-size="22" font-style="italic" text-anchor="middle" fill="#f26522">ZapVer</text>
+            </svg>
+            <div>
+                <h2>ຮ້ານ ZapVer POS</h2>
+                <p>ລາຍງານສິນຄ້າຂາຍດີ / Top Selling Products Report (A4)</p>
+            </div>
+        </div>
+        <div class="a4-meta">
+            <p><strong>ວັນທີພິມ:</strong> <span class="p-print-now"></span></p>
+            <p><strong>ຊ່ວງວັນທີ:</strong> <span id="p-a4-date-products"></span></p>
+            <p><strong>ຜູ້ອອກລາຍງານ:</strong> Admin</p>
+        </div>
+    </div>
+
+    <div class="a4-summary-grid" style="grid-template-columns: repeat(2, 1fr);">
+        <div class="a4-summary-box">
+            <span>ລວມຈຳນວນສິນຄ້າຂາຍໄດ້</span>
+            <strong id="p-a4-total-qty-products">0</strong>
+        </div>
+        <div class="a4-summary-box primary">
+            <span>ລວມຍອດຂາຍສິນຄ້າທັງໝົດ</span>
+            <strong id="p-a4-total-products">0 ₭</strong>
+        </div>
+    </div>
+
+    <table class="a4-table">
+        <thead>
+            <tr>
+                <th style="width: 50px;" class="text-center">ລຳດັບ</th>
+                <th>ຊື່ສິນຄ້າ / ບໍລິການ</th>
+                <th style="width: 130px;">ໝວດໝູ່</th>
+                <th style="width: 120px;" class="text-right">ລາຄາ/ໜ່ວຍ (₭)</th>
+                <th style="width: 100px;" class="text-center">ຈຳນວນຂາຍ</th>
+                <th style="width: 150px;" class="text-right">ລວມເງິນ (₭)</th>
+            </tr>
+        </thead>
+        <tbody id="ptable-products-a4">
+            <!-- populated by JS -->
+        </tbody>
+    </table>
+
+    <div class="a4-signatures">
+        <div class="sig-box">
+            <p>ຜູ້ຈັດການ (Manager)</p>
+            <div class="sig-line"></div>
+            <span>ວັນທີ: ____/____/________</span>
+        </div>
+        <div class="sig-box">
+            <p>ຜູ້ອອກລາຍງານ (Reported By)</p>
+            <div class="sig-line"></div>
+            <span>ວັນທີ: ____/____/________</span>
+        </div>
+    </div>
+
+    <div class="a4-footer">
+        <p>ZapVer POS Management System - Document Generated Automatically</p>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    var productsData = [
+        { name: 'ເບຍລາວ ໃຫຍ່', cat: 'ເຄື່ອງດື່ມ', qty: 124, price: 15000 },
+        { name: 'ປາໜຶ້ງໝາກນາວ', cat: 'ອາຫານ', qty: 45, price: 85000 },
+        { name: 'ຕຳໝາກຫຸ່ງ', cat: 'ອາຫານ', qty: 110, price: 25000 },
+        { name: 'ຍຳລວມມິດທະເລ', cat: 'ອາຫານ', qty: 56, price: 75000 },
+        { name: 'ນ້ຳປັ່ນໝາກໂມ', cat: 'ເຄື່ອງດື່ມ', qty: 82, price: 20000 },
+        { name: 'ເຂົ້າຜັດລວມ', cat: 'ອາຫານ', qty: 95, price: 35000 },
+        { name: 'ເບຍລ້ານຊ້າງ', cat: 'ເຄື່ອງດື່ມ', qty: 110, price: 15000 },
+        { name: 'ປີກໄກ່ທອດ', cat: 'ອາຫານ', qty: 165, price: 45000 },
+        { name: 'ໝູກອບ', cat: 'ອາຫານ', qty: 88, price: 60000 },
+        { name: 'ນ້ຳດື່ມ ຫົວເສືອ', cat: 'ເຄື່ອງດື່ມ', qty: 320, price: 5000 },
+        { name: 'ເຂົ້າໜຽວ', cat: 'ອາຫານ', qty: 450, price: 5000 },
+        { name: 'ຄ່າຫ້ອງ VIP', cat: 'ບໍລິການ', qty: 5, price: 150000 },
+        { name: 'ຄ່າບໍລິການ (Service Charge)', cat: 'ບໍລິການ', qty: 1, price: 250000 }
+    ];
+
+    function renderProducts() {
+        const catFilter = $('#rp_category').val();
+        const searchFilter = $('#rp_search').val().toLowerCase();
+        let html = '';
+        let printHtml = '';
+        let printA4Html = '';
+        let totalQty = 0;
+        let totalAmt = 0;
+        let idx = 1;
+
+        productsData.forEach(row => {
+            if (catFilter && row.cat !== catFilter) return;
+            if (searchFilter && !row.name.toLowerCase().includes(searchFilter)) return;
+            
+            const total = row.qty * row.price;
+            totalQty += row.qty;
+            totalAmt += total;
+            
+            html += `<tr>
+                <td style="color:var(--text-muted)">${idx}</td>
+                <td style="font-weight:600;">${row.name}</td>
+                <td><span class="badge" style="background:#f1f5f9; color:#475569;">${row.cat}</span></td>
+                <td class="text-center" style="font-size:16px; font-weight:700;">${row.qty}</td>
+                <td class="text-right font-weight-bold" style="color:var(--info); font-weight:700;">${formatCurrency(total)}</td>
+            </tr>`;
+            
+            printHtml += `<tr>
+                <td>
+                    ${idx}. ${row.name}
+                    <span class="r-item-sub">${formatCurrency(row.price)} x ${row.qty}</span>
+                </td>
+                <td class="right">${formatCurrency(total)}</td>
+            </tr>`;
+
+            printA4Html += `<tr>
+                <td class="text-center">${idx}</td>
+                <td style="font-weight:600;">${row.name}</td>
+                <td>${row.cat}</td>
+                <td class="text-right">${formatCurrency(row.price)} ₭</td>
+                <td class="text-center" style="font-weight:bold;">${row.qty}</td>
+                <td class="text-right" style="font-weight:bold;">${formatCurrency(total)} ₭</td>
+            </tr>`;
+            idx++;
+        });
+
+        if(html === '') {
+            html = '<tr><td colspan="5" class="text-center" style="padding: 30px; color: var(--text-muted);">ບໍ່ພົບຂໍ້ມູນສິນຄ້າ</td></tr>';
+            printHtml += '<tr><td colspan="2" style="text-align:center">ບໍ່ພົບຂໍ້ມູນ</td></tr>';
+            printA4Html += '<tr><td colspan="6" class="text-center">ບໍ່ພົບຂໍ້ມູນ</td></tr>';
+        } else {
+            html += `<tr style="background: rgba(242, 101, 34, 0.05);">
+                <td colspan="3" class="text-right" style="font-weight:bold;">ລວມທັງໝົດ:</td>
+                <td class="text-center" style="font-size:18px; font-weight:bold; color:var(--primary);">${totalQty}</td>
+                <td class="text-right" style="font-size:18px; font-weight:bold; color:var(--primary);">${formatCurrency(totalAmt)}</td>
+            </tr>`;
+
+            printA4Html += `<tr class="total-row">
+                <td colspan="3" class="text-right" style="font-weight:bold;">ລວມທັງໝົດ:</td>
+                <td class="text-right">-</td>
+                <td class="text-center" style="font-weight:bold;">${totalQty}</td>
+                <td class="text-right" style="font-weight:bold;">${formatCurrency(totalAmt)} ₭</td>
+            </tr>`;
+        }
+
+        $('#tbody-products').html(html);
+        $('#ptable-products').html(printHtml);
+        $('#ptable-products-a4').html(printA4Html);
+        $('#ptotal-products, #p-a4-total-products').text(formatCurrency(totalAmt) + ' ₭');
+        $('#ptotal-qty-products, #p-a4-total-qty-products').text(totalQty);
+        
+        const sd = $('#rp_start').val();
+        const ed = $('#rp_end').val();
+        $('#p-date-products, #p-a4-date-products').text(`${sd} - ${ed}`);
+    }
+
+    renderProducts();
+    $('#btn-search-products').on('click', renderProducts);
+    $('#rp_category, #rp_search').on('change keyup', function(e) {
+        if(e.type === 'keyup' && e.key !== 'Enter') return;
+        renderProducts();
+    });
+});
+</script>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

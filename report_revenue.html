@@ -1,0 +1,287 @@
+<!-- Filters Bar -->
+<div class="filters-bar">
+    <div class="filter-group">
+        <label>ຊ່ວງເວລາ</label>
+        <select id="rr_period">
+            <option value="today">ມື້ນີ້</option>
+            <option value="yesterday">ມື້ວານນີ້</option>
+            <option value="this_month">ເດືອນນີ້</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <label>ຈາກວັນທີ</label>
+        <input type="date" id="rr_start" value="2026-07-27">
+    </div>
+    <div class="filter-group">
+        <label>ຫາວັນທີ</label>
+        <input type="date" id="rr_end" value="2026-07-27">
+    </div>
+    <button class="btn btn-search" id="btn-search-revenue">
+        <i class="bi bi-search"></i> ຄົ້ນຫາ
+    </button>
+    <button class="btn btn-print" onclick="printReceipt('print-revenue')">
+        <i class="bi bi-printer"></i> ພິມລາຍງານ (80mm)
+    </button>
+    <button class="btn btn-print-a4" onclick="printReceipt('print-revenue-a4', true)">
+        <i class="bi bi-file-earmark-pdf"></i> ພິມລາຍງານ (A4)
+    </button>
+</div>
+
+<!-- Summary Cards for Revenue -->
+<div class="summary-cards">
+    <div class="card">
+        <div class="card-icon green"><i class="bi bi-cash"></i></div>
+        <div class="card-info">
+            <span class="card-label">ຮັບເງິນສົດ (Cash)</span>
+            <span class="card-value" id="val-cash-rev">0 ₭</span>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-icon blue"><i class="bi bi-bank"></i></div>
+        <div class="card-info">
+            <span class="card-label">ຮັບເງິນໂອນ (Transfer)</span>
+            <span class="card-value" id="val-transfer-rev">0 ₭</span>
+        </div>
+    </div>
+    <div class="card" style="background: rgba(242, 101, 34, 0.05); border-color: var(--primary);">
+        <div class="card-icon orange"><i class="bi bi-wallet2"></i></div>
+        <div class="card-info">
+            <span class="card-label">ລວມຮັບເງິນທັງໝົດ</span>
+            <span class="card-value" id="val-total-rev" style="color: var(--primary);">0 ₭</span>
+        </div>
+    </div>
+</div>
+
+<!-- Data Table -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ລຳດັບ</th>
+                <th>ຊ່ອງທາງຮັບເງິນ</th>
+                <th class="text-center">ຈຳນວນລາຍການ (ບິນ)</th>
+                <th class="text-right">ຍອດຮັບເງິນ (₭)</th>
+            </tr>
+        </thead>
+        <tbody id="tbody-revenue"></tbody>
+    </table>
+</div>
+
+<!-- Print 80mm Template (Hidden) styled like Zapver Receipt -->
+<div id="print-revenue" class="print-area">
+    <svg class="r-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="4 2"/>
+        <text x="50" y="55" font-family="sans-serif" font-weight="bold" font-size="20" font-style="italic" text-anchor="middle" fill="#000">ZapVer</text>
+    </svg>
+
+    <div class="r-header">
+        <h2>ລາຍງານຍອດເງິນການຂາຍ</h2>
+        <p>ZapVer POS</p>
+    </div>
+    
+    <div class="r-divider"></div>
+
+    <div class="r-info">
+        <div class="r-info-row">
+            <span>ວັນທີພິມ (Print Date)</span>
+            <span>27/07/2026 17:30:15</span>
+        </div>
+        <div class="r-info-row">
+            <span>ຊ່ວງວັນທີ (Date Range)</span>
+            <span id="p-date-revenue"></span>
+        </div>
+    </div>
+
+    <table class="r-table">
+        <thead>
+            <tr>
+                <th>ຊ່ອງທາງຮັບເງິນ</th>
+                <th class="right">ລວມ (Total)</th>
+            </tr>
+        </thead>
+        <tbody id="ptable-revenue">
+            <!-- populated by js -->
+        </tbody>
+    </table>
+
+    <div class="r-totals">
+        <div class="r-total-row">
+            <span>ລວມລາຍການ (QTY)</span>
+            <span id="ptotal-qty-revenue">0</span>
+        </div>
+    </div>
+    
+    <div class="r-divider-bold"></div>
+    
+    <div class="r-totals">
+        <div class="r-total-row grand-total">
+            <span>ຍອດເງິນ (Amount)</span>
+            <span id="ptotal-revenue">0 ₭</span>
+        </div>
+    </div>
+
+    <div class="r-divider"></div>
+    
+    <div class="r-footer">
+        <p>ສະຫຼຸບລາຍງານຍອດເງິນ</p>
+        <p>Thank You For Using ZapVer</p>
+    </div>
+</div>
+
+<!-- Print A4 Template for Revenue Report -->
+<div id="print-revenue-a4" class="print-area-a4">
+    <div class="a4-header">
+        <div class="a4-brand">
+            <svg class="a4-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#f26522" stroke-width="4"/>
+                <text x="50" y="58" font-family="sans-serif" font-weight="bold" font-size="22" font-style="italic" text-anchor="middle" fill="#f26522">ZapVer</text>
+            </svg>
+            <div>
+                <h2>ຮ້ານ ZapVer POS</h2>
+                <p>ລາຍງານຍອດເງິນຂາຍຕາມປະເພດການຈ່າຍ / Revenue Report (A4)</p>
+            </div>
+        </div>
+        <div class="a4-meta">
+            <p><strong>ວັນທີພິມ:</strong> <span class="p-print-now"></span></p>
+            <p><strong>ຊ່ວງວັນທີ:</strong> <span id="p-a4-date-revenue"></span></p>
+            <p><strong>ຜູ້ອອກລາຍງານ:</strong> Admin</p>
+        </div>
+    </div>
+
+    <div class="a4-summary-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="a4-summary-box">
+            <span>ຮັບເງິນສົດ (Cash)</span>
+            <strong id="p-a4-val-cash-rev">0 ₭</strong>
+        </div>
+        <div class="a4-summary-box">
+            <span>ຮັບເງິນໂອນ (Transfer)</span>
+            <strong id="p-a4-val-transfer-rev">0 ₭</strong>
+        </div>
+        <div class="a4-summary-box primary">
+            <span>ລວມຍອດເງິນທັງໝົດ</span>
+            <strong id="p-a4-val-total-rev">0 ₭</strong>
+        </div>
+    </div>
+
+    <table class="a4-table">
+        <thead>
+            <tr>
+                <th style="width: 50px;" class="text-center">ລຳດັບ</th>
+                <th>ປະເພດການຈ່າຍເງິນ / Payment Method</th>
+                <th style="width: 140px;" class="text-center">ຈຳນວນລາຍການ (ບິນ)</th>
+                <th style="width: 180px;" class="text-right">ລວມເງິນ (₭)</th>
+            </tr>
+        </thead>
+        <tbody id="ptable-revenue-a4">
+            <!-- populated by JS -->
+        </tbody>
+    </table>
+
+    <div class="a4-signatures">
+        <div class="sig-box">
+            <p>ຜູ້ຈັດການ (Manager)</p>
+            <div class="sig-line"></div>
+            <span>ວັນທີ: ____/____/________</span>
+        </div>
+        <div class="sig-box">
+            <p>ຜູ້ອອກລາຍງານ (Reported By)</p>
+            <div class="sig-line"></div>
+            <span>ວັນທີ: ____/____/________</span>
+        </div>
+    </div>
+
+    <div class="a4-footer">
+        <p>ZapVer POS Management System - Document Generated Automatically</p>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    function generateRevenueData() {
+        return [
+            { method: 'ເງິນສົດ (Cash)', code: 'cash', count: Math.floor(Math.random() * 50) + 10, amount: Math.floor(Math.random() * 5000000) + 1000000 },
+            { method: 'ເງິນໂອນບັນຊີ BCEL', code: 'transfer', count: Math.floor(Math.random() * 80) + 20, amount: Math.floor(Math.random() * 12000000) + 5000000 },
+            { method: 'ເງິນໂອນບັນຊີ JDB', code: 'transfer', count: Math.floor(Math.random() * 15) + 1, amount: Math.floor(Math.random() * 2000000) + 100000 },
+            { method: 'ບັດເຄຣດິດ/ເດບິດ', code: 'card', count: Math.floor(Math.random() * 5), amount: Math.floor(Math.random() * 1000000) }
+        ];
+    }
+
+    function renderRevenue() {
+        const data = generateRevenueData(); // generate new data on each search to simulate backend refresh
+        let html = '';
+        let printHtml = '';
+        let printA4Html = '';
+        let totalCash = 0;
+        let totalTransfer = 0;
+        let totalOverall = 0;
+        let totalCount = 0;
+        let idx = 1;
+
+        data.forEach(row => {
+            if(row.amount === 0) return;
+            
+            totalOverall += row.amount;
+            totalCount += row.count;
+            if (row.code === 'cash') totalCash += row.amount;
+            else totalTransfer += row.amount; 
+            
+            const badgeClass = row.code === 'cash' ? 'cash' : 'transfer';
+            
+            html += `<tr>
+                <td style="color:var(--text-muted)">${idx}</td>
+                <td style="font-weight:600;"><span class="badge ${badgeClass}" style="margin-right: 10px;">${row.code.toUpperCase()}</span> ${row.method}</td>
+                <td class="text-center" style="font-size:16px;">${row.count}</td>
+                <td class="text-right font-weight-bold" style="color:var(--text-main); font-weight:700;">${formatCurrency(row.amount)}</td>
+            </tr>`;
+            
+            printHtml += `<tr>
+                <td>
+                    ${idx}. ${row.method}
+                    <span class="r-item-sub">ລາຍການ: ${row.count} ບິນ</span>
+                </td>
+                <td class="right">${formatCurrency(row.amount)}</td>
+            </tr>`;
+
+            printA4Html += `<tr>
+                <td class="text-center">${idx}</td>
+                <td style="font-weight:600;">${row.method}</td>
+                <td class="text-center" style="font-weight:bold;">${row.count} ບິນ</td>
+                <td class="text-right" style="font-weight:bold;">${formatCurrency(row.amount)} ₭</td>
+            </tr>`;
+            idx++;
+        });
+
+        if (data.length > 0) {
+            printA4Html += `<tr class="total-row">
+                <td colspan="2" class="text-right" style="font-weight:bold;">ລວມທັງໝົດ:</td>
+                <td class="text-center" style="font-weight:bold;">${totalCount} ບິນ</td>
+                <td class="text-right" style="font-weight:bold;">${formatCurrency(totalOverall)} ₭</td>
+            </tr>`;
+        }
+
+        $('#tbody-revenue').html(html);
+        $('#ptable-revenue').html(printHtml);
+        $('#ptable-revenue-a4').html(printA4Html);
+        
+        // Update summary cards & A4 summary boxes
+        $('#val-cash-rev, #p-a4-val-cash-rev').text(formatCurrency(totalCash) + ' ₭');
+        $('#val-transfer-rev, #p-a4-val-transfer-rev').text(formatCurrency(totalTransfer) + ' ₭');
+        $('#val-total-rev, #p-a4-val-total-rev').text(formatCurrency(totalOverall) + ' ₭');
+        
+        // Update Print Totals
+        $('#ptotal-revenue').text(formatCurrency(totalOverall) + ' ₭');
+        $('#ptotal-qty-revenue').text(totalCount);
+        
+        const sd = $('#rr_start').val();
+        const ed = $('#rr_end').val();
+        $('#p-date-revenue, #p-a4-date-revenue').text(`${sd} - ${ed}`);
+    }
+
+    renderRevenue();
+    $('#btn-search-revenue').on('click', renderRevenue);
+    $('#rr_period').on('change', function() {
+        renderRevenue();
+    });
+});
+</script>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
