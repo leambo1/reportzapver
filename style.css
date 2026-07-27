@@ -250,11 +250,17 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
 .print-area, .print-area-a4 { display: none; }
 
 @media print {
+    @page {
+        size: A4 portrait;
+        margin: 10mm;
+    }
     body * { visibility: hidden; }
     .active-print, .active-print *, .active-print-a4, .active-print-a4 * { visibility: visible; }
     
     body {
         background: #fff;
+        margin: 0;
+        padding: 0;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
@@ -381,16 +387,18 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
     .r-footer p { margin: 2px 0; }
 
     /* ========================================================
-       A4 Document Layout Styles
+       A4 Document Layout Styles - Centered & Perfectly Aligned
        ======================================================== */
     .active-print-a4 {
         display: block !important;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        margin: 0;
-        padding: 10mm 15mm;
+        position: relative !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
         font-family: 'Noto Sans Lao', 'Phetsarath OT', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         color: #1e293b;
         background: #fff;
@@ -400,10 +408,10 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
     .a4-header {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
         border-bottom: 2px solid #e2e8f0;
-        padding-bottom: 12px;
-        margin-bottom: 15px;
+        padding-bottom: 14px;
+        margin-bottom: 18px;
     }
     .a4-brand {
         display: flex;
@@ -438,25 +446,31 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
     .a4-summary-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
+        gap: 12px;
         margin-bottom: 20px;
+        width: 100%;
+        box-sizing: border-box;
     }
     .a4-summary-box {
         background: #f8fafc;
         border: 1px solid #e2e8f0;
-        border-radius: 6px;
-        padding: 8px 12px;
+        border-radius: 8px;
+        padding: 10px 14px;
+        text-align: left;
+        box-sizing: border-box;
     }
     .a4-summary-box span {
         display: block;
         font-size: 11px;
         color: #64748b;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
+        font-weight: 500;
     }
     .a4-summary-box strong {
         display: block;
         font-size: 15px;
         color: #0f172a;
+        font-weight: 700;
     }
     .a4-summary-box.primary {
         background: #fff7ed;
@@ -469,21 +483,23 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
     .a4-table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 12.5px;
+        font-size: 12px;
         margin-bottom: 20px;
+        box-sizing: border-box;
     }
     .a4-table th {
         background: #f1f5f9;
         color: #334155;
         font-weight: 700;
-        padding: 8px 10px;
+        padding: 9px 8px;
         border: 1px solid #cbd5e1;
         text-align: left;
     }
     .a4-table td {
-        padding: 8px 10px;
+        padding: 8px;
         border: 1px solid #e2e8f0;
         color: #1e293b;
+        vertical-align: middle;
     }
     .a4-table tr:nth-child(even) td {
         background: #fafafa;
@@ -520,28 +536,31 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
     .a4-signatures {
         display: flex;
         justify-content: space-between;
-        margin-top: 40px;
-        padding-top: 10px;
+        align-items: flex-end;
+        margin-top: 45px;
+        padding: 0 30px;
     }
     .sig-box {
         text-align: center;
-        width: 180px;
+        width: 220px;
         font-size: 12px;
         color: #475569;
     }
     .sig-box p {
         font-weight: 600;
-        margin-bottom: 45px;
+        margin-bottom: 50px;
+        color: #1e293b;
     }
     .sig-line {
         border-bottom: 1px dashed #94a3b8;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
+        width: 100%;
     }
 
     .a4-footer {
         margin-top: 30px;
         border-top: 1px solid #e2e8f0;
-        padding-top: 8px;
+        padding-top: 10px;
         text-align: center;
         font-size: 11px;
         color: #94a3b8;
