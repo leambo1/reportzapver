@@ -246,6 +246,7 @@
     <div class="r-footer">
         <p>ສະຫຼຸບລາຍງານຕາມກະ</p>
         <p>Thank You For Using ZapVer</p>
+    </div>
 </div>
 
 <!-- Print A4 Template for All Shift Report -->
@@ -442,7 +443,7 @@ function openShiftModal(index) {
         }
     }
     
-    // Populate Print Template (80mm & A4)
+    // Populate Single Shift Print Templates
     $('#psh_code, #psh_a4_code').text(sh.code);
     $('#psh_user, #psh_a4_user').text(sh.user);
     $('#psh_open, #psh_a4_open').text(sh.openTime);
@@ -456,7 +457,7 @@ function openShiftModal(index) {
     $('#psh_counted, #psh_a4_tb_count').text(sh.counted !== null ? formatCurrency(sh.counted) + ' ₭' : '—');
     $('#psh_diff, #psh_a4_tb_diff').text(sh.diff !== null ? formatCurrency(sh.diff) + ' ₭' : '—');
     
-    // Bind print buttons
+    // Bind print buttons inside modal
     $('#btn-reprint-shift').off('click').on('click', function() {
         printReceipt('print-single-shift');
     });
@@ -586,4 +587,3 @@ $(document).ready(function() {
     });
 });
 </script>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
