@@ -265,7 +265,8 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
     .filters-bar,
     .summary-cards,
     .table-container,
-    .modal-overlay {
+    .modal-overlay,
+    .rev-summary-row {
         display: none !important;
     }
 
@@ -277,6 +278,9 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
         background-color: #ffffff !important;
         margin: 0 !important;
         padding: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
         box-shadow: none !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
@@ -290,9 +294,12 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
     /* 80mm Thermal Receipt Print */
     .active-print {
         display: block !important;
-        position: static !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
         width: 80mm !important;
-        margin: 0 auto !important;
+        margin: 0 !important;
         padding: 5mm;
         font-family: 'Noto Sans Lao', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         color: #000;
