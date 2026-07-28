@@ -19,7 +19,7 @@ function printReceipt(containerId, isA4) {
         pageRule = '@page { size: A4 portrait; margin: 10mm; }';
         $('#' + containerId).addClass('active-print-a4');
     } else {
-        pageRule = '@page { size: 80mm 297mm; margin: 0; }';
+        pageRule = '@page { size: 80mm auto; margin: 5mm 0; }';
         $('#' + containerId).addClass('active-print');
     }
 
@@ -439,7 +439,8 @@ function initRevenuePage() {
         $('#val-transfer-rev, #p-a4-val-transfer-rev').text(formatCurrency(totalTransfer) + ' ₭');
         $('#val-total-rev, #p-a4-val-total-rev').text(formatCurrency(totalOverall) + ' ₭');
         $('#ptotal-revenue').text(formatCurrency(totalOverall) + ' ₭');
-        $('#ptotal-qty-revenue').text(totalCount);
+        $('#ptotal-qty-revenue').text(totalCount + ' ບິນ');
+        $('#ptotal-items-revenue').text(revenueData.length + ' ລາຍການ');
 
         var sd = $('#rr_start').val();
         var ed = $('#rr_end').val();

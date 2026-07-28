@@ -154,6 +154,9 @@ body::before {
 
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 14px 1.5rem; text-align: left; border: 1px solid rgba(226, 232, 240, 0.8); white-space: nowrap; }
+@media screen {
+    .table-container th, .table-container td { border: 1px solid rgba(226, 232, 240, 0.8); }
+}
 
 /* Make thead stand out */
 thead th { 
@@ -279,12 +282,17 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.8); }
         print-color-adjust: exact;
     }
     
+    /* Remove all screen table borders during print */
+    th, td {
+        border: none !important;
+    }
+
     /* 80mm Thermal Receipt Print */
     .active-print {
         display: block !important;
         position: static !important;
         width: 80mm !important;
-        margin: 0 !important;
+        margin: 0 auto !important;
         padding: 5mm;
         font-family: 'Noto Sans Lao', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         color: #000;
