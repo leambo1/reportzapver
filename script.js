@@ -378,10 +378,10 @@ function initProductsPage() {
 
 // ==================== REVENUE PAGE ====================
 var revenueData = [
-    { method: 'ເງິນສົດ (Cash)', type: 'cash', count: 85, amount: 2795694 },
-    { method: 'ເງິນໂອນ BCEL One', type: 'transfer', count: 167, amount: 7784013 },
-    { method: 'ເງິນໂອນ JDB', type: 'transfer', count: 12, amount: 1423535 },
-    { method: 'ບັດເຄຣດິດ/ເດບິດ', type: 'transfer', count: 3, amount: 204434 }
+    { method: 'ເງິນສົດ (Cash)', type: 'cash', count: 85, items: 213, amount: 2795694 },
+    { method: 'ເງິນໂອນ BCEL One', type: 'transfer', count: 167, items: 418, amount: 7784013 },
+    { method: 'ເງິນໂອນ JDB', type: 'transfer', count: 12, items: 31, amount: 1423535 },
+    { method: 'ບັດເຄຣດິດ/ເດບິດ', type: 'transfer', count: 3, items: 5, amount: 204434 }
 ];
 
 function initRevenuePage() {
@@ -393,6 +393,7 @@ function initRevenuePage() {
         var totalTransfer = 0;
         var totalOverall = 0;
         var totalCount = 0;
+        var totalItems = 0;
         var idx = 1;
 
         revenueData.forEach(function (row) {
@@ -400,24 +401,26 @@ function initRevenuePage() {
             if (row.type === 'transfer') totalTransfer += row.amount;
             totalOverall += row.amount;
             totalCount += row.count;
+            totalItems += row.items;
 
             var iconClass = row.type === 'cash' ? 'bi-cash-coin text-success' : 'bi-credit-card text-primary';
+            var countHtml = '<span style="font-weight:700;">' + row.count + ' ບິນ</span><br><small style="color:var(--text-muted); font-size:12px;">' + row.items + ' ລາຍການ</small>';
 
             html += '<tr>' +
                 '<td style="color:var(--text-muted)">' + idx + '</td>' +
                 '<td style="font-weight:600;"><i class="bi ' + iconClass + '" style="margin-right:8px;"></i>' + row.method + '</td>' +
-                '<td class="text-center" style="font-size:16px; font-weight:700;">' + row.count + ' ບິນ</td>' +
+                '<td class="text-center">' + countHtml + '</td>' +
                 '<td class="text-right" style="font-size:15px;">' + formatCurrency(row.amount) + '</td>' +
                 '</tr>';
 
             printHtml += '<tr><td>' + idx + '. ' + row.method +
-                '<span class="r-item-sub">ລາຍການ: ' + row.count + ' ບິນ</span></td>' +
+                '<span class="r-item-sub">' + row.count + ' ບິນ | ' + row.items + ' ລາຍການ</span></td>' +
                 '<td class="right">' + formatCurrency(row.amount) + '</td></tr>';
 
             printA4Html += '<tr>' +
                 '<td class="text-center">' + idx + '</td>' +
                 '<td style="font-weight:600;">' + row.method + '</td>' +
-                '<td class="text-center" style="font-weight:bold;">' + row.count + ' ບິນ</td>' +
+                '<td class="text-center"><span style="font-weight:bold;">' + row.count + ' ບິນ</span><br><small>' + row.items + ' ລາຍການ</small></td>' +
                 '<td class="text-right" style="font-weight:bold;">' + formatCurrency(row.amount) + ' ₭</td>' +
                 '</tr>';
             idx++;
@@ -426,7 +429,7 @@ function initRevenuePage() {
         if (revenueData.length > 0) {
             printA4Html += '<tr class="total-row">' +
                 '<td colspan="2" class="text-right" style="font-weight:bold;">ລວມທັງໝົດ:</td>' +
-                '<td class="text-center" style="font-weight:bold;">' + totalCount + ' ບິນ</td>' +
+                '<td class="text-center" style="font-weight:bold;">' + totalCount + ' ບິນ<br><small>' + totalItems + ' ລາຍການ</small></td>' +
                 '<td class="text-right" style="font-weight:bold;">' + formatCurrency(totalOverall) + ' ₭</td>' +
                 '</tr>';
         }
@@ -440,7 +443,7 @@ function initRevenuePage() {
         $('#val-total-rev, #p-a4-val-total-rev').text(formatCurrency(totalOverall) + ' ₭');
         $('#ptotal-revenue').text(formatCurrency(totalOverall) + ' ₭');
         $('#ptotal-qty-revenue').text(totalCount + ' ບິນ');
-        $('#ptotal-items-revenue').text(revenueData.length + ' ລາຍການ');
+        $('#ptotal-items-revenue').text(totalItems + ' ລາຍການ');
 
         var sd = $('#rr_start').val();
         var ed = $('#rr_end').val();
